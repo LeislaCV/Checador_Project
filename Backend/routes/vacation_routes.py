@@ -1,95 +1,62 @@
-from flask import Blueprint,request,jsonify
+from flask import Blueprint, request, jsonify
+from Backend.controller.vacation_controller import (create_vacation,get_vacations,get_vacation,update_vacation,delete_vacation)
 
-from Backend.controller.vacation_controller import *
+vacation_routes_bp = Blueprint("vacation_bp",__name__)
 
-
-vacation_routes=Blueprint(
-    "vacation",
-    __name__
-)
-
-
-# Crear permiso
-@vacation_routes.route(
-"/vacations",
-methods=["POST"]
-)
+@vacation_routes_bp.route("/vacations",methods=["POST"])
 def create():
-
-
-    vacation=create_vacation(
-        request.json
-    )
-
-
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"message": "No se recibieron datos"}), 400
+        
+    vacation, error = create_vacation(data)
+    if error:
+        return jsonify({"message": error}), 400
+        
     return jsonify({
+        "message": "Permiso creado correctamente",
+        "vacation": vacation.to_dict()
+    }), 200
 
-        "message":
-        "Permiso creado",
-
-        "vacation":
-        vacation.to_dict()
-
-    })
-
-
-
-# Historial permisos usuario
-@vacation_routes.route(
-"/vacations/user/<int:user_id>",
-methods=["GET"]
-)
+@vacation_routes_bp.route("/vacations/user/<int:user_id>",methods=["GET"])
 def history(user_id):
+    vacations = get_vacations(user_id)
+    return jsonify([
+        vacation.to_dict()
+        for vacation in vacations
+    ]), 200
 
-
-    vacations=get_vacations(
-        user_id
-    )
-
-
-    return jsonify(
-        [
-            v.to_dict()
-            for v in vacations
-        ]
-    )
-
-
-
-# Actualizar permiso
-@vacation_routes.route(
-"/vacations/<int:id>",
-methods=["PUT"]
-)
-def update(id):
-
-
-    vacation=update_vacation(
-        id,
-        request.json
-    )
-
-
+@vacation_routes_bp.route("/vacations/<int:id>",methods=["GET"])
+def get_one(id):
+    vacation = get_vacation(id)
+    if not vacation:
+        return jsonify({
+            "message": "Permiso no encontrado"
+        }), 404
     return jsonify(
         vacation.to_dict()
-    )
+    ), 200
 
-
-
-# Eliminar permiso
-@vacation_routes.route(
-"/vacations/<int:id>",
-methods=["DELETE"]
-)
-def delete(id):
-
-
-    delete_vacation(id)
-
-
+@vacation_routes_bp.route("/vacations/<int:id>",methods=["PUT"])
+def update(id):
+    data = request.get_json()
+    vacation = update_vacation(id,data)
+    if not vacation:
+        return jsonify({
+            "message": "Permiso no encontrado"
+        }), 404
     return jsonify({
+        "message": "Permiso actualizado correctamente",
+        "vacation": vacation.to_dict()
+    }), 200
 
-        "message":
-        "Permiso eliminado"
-
-    })
+@vacation_routes_bp.route("/vacations/<int:id>",methods=["DELETE"])
+def delete(id):
+    vacation = delete_vacation(id)
+    if not vacation:
+        return jsonify({
+            "message": "Permiso no encontrado"
+        }), 404
+    return jsonify({
+        "message": "Permiso eliminado correctamente"
+    }), 200

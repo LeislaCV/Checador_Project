@@ -1,9 +1,13 @@
 Flask
 Flask-SQLAlchemy
+Flask-Migrate
+Flask-CORS
+Flask-JWT-Extended
+python-dotenv
 Werkzeug
 deepface
 tf-keras
 opencv-python
 numpy
 gunicorn
-pymysql
+psycopg2-binary

@@ -1,38 +1,50 @@
-from flask import Blueprint,request,jsonify
+from flask import Blueprint, request, jsonify
+from Backend.controller.schedule_controller import (create_schedule,get_schedules,get_schedule,update_schedule,delete_schedule)
 
-from Backend.controller.schedule_controller import *
+schedule_routes_bp = Blueprint("schedule_bp",__name__)
 
-
-schedule_routes=Blueprint("schedule",__name__)
-@schedule_routes.route("/schedule",methods=["POST"])
+@schedule_routes_bp.route("/schedules", methods=["POST"])
 def create():
-    schedule=create_schedule(
-        request.json
-    )
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"message": "No se recibieron datos"}), 400
+
+    schedule = create_schedule(data)
     return jsonify({
-        "message":
-        "Horario creado",
-        "schedule":
-        schedule.to_dict()
+        "message": "Horario creado correctamente",
+        "schedule": schedule.to_dict()
+    }), 200
 
-    })
-
-@schedule_routes.route("/schedule",methods=["GET"])
+@schedule_routes_bp.route("/schedules/all", methods=["GET"])
 def get_all():
-    schedules=get_schedules()
-    return jsonify(
-        [
-            s.to_dict()
-            for s in schedules
-        ]
-    )
+    schedules = get_schedules()
+    return jsonify([schedule.to_dict() for schedule in schedules]), 200
 
-@schedule_routes.route("/schedule/<int:id>",methods=["PUT"])
+@schedule_routes_bp.route("/schedules/<int:id>", methods=["GET"])
+def get_one(id):
+    schedule = get_schedule(id)
+    if not schedule:
+        return jsonify({"message": "Horario no encontrado"}), 404
+    return jsonify(schedule.to_dict()), 200
+
+
+@schedule_routes_bp.route("/schedules/<int:id>", methods=["PUT"])
 def update(id):
-    schedule=update_schedule(
-        id,
-        request.json
-    )
-    return jsonify(
-        schedule.to_dict()
-    )
+    data = request.get_json(silent=True) or {}
+    schedule = update_schedule(id, data)
+    if not schedule:
+        return jsonify({"message": "Horario no encontrado"}), 404
+
+    return jsonify({
+        "message": "Horario actualizado correctamente",
+        "schedule": schedule.to_dict()
+    }), 200
+
+
+@schedule_routes_bp.route("/schedules/<int:id>", methods=["DELETE"])
+def delete(id):
+    schedule = delete_schedule(id)
+    if not schedule:
+        return jsonify({"message": "Horario no encontrado"}), 404
+
+    return jsonify({"message": "Horario eliminado correctamente"}), 200

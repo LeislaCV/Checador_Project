@@ -20,23 +20,27 @@ def create_app():
     from Backend.models.schedule import Schedule
     from Backend.models.user import User
 
+
     db.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
 
     #Rutas
-    from Backend.routes.user_routes import user_routes
-    from Backend.routes.attendance_routes import attendance_routes
-    from Backend.routes.vacation_routes import vacation_routes
-    from Backend.routes.schedule_routes import schedule_routes
-    from Backend.routes.face_routes import face_routes
-    from Backend.routes.area_routes import area_routes
+    from Backend.routes.user_routes import user_routes_bp
+    from Backend.routes.attendance_routes import attendance_routes_bp
+    from Backend.routes.vacation_routes import vacation_routes_bp
+    from Backend.routes.schedule_routes import schedule_routes_bp
+    from Backend.routes.face_routes import face_routes_bp
+    from Backend.routes.area_routes import area_routes_bp
+    from Backend.routes.auth_routes import auth_routes_bp
 
-    app.register_blueprint(user_routes)
-    app.register_blueprint(attendance_routes)
-    app.register_blueprint(vacation_routes)
-    app.register_blueprint(schedule_routes)
-    app.register_blueprint(face_routes)
-    app.register_blueprint(area_routes)
+    app.register_blueprint(user_routes_bp)
+    app.register_blueprint(attendance_routes_bp)
+    app.register_blueprint(vacation_routes_bp)
+    app.register_blueprint(schedule_routes_bp)
+    app.register_blueprint(face_routes_bp)
+    app.register_blueprint(area_routes_bp)
+    app.register_blueprint(auth_routes_bp)
+    
     CORS(app)
     return app
