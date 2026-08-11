@@ -32,7 +32,7 @@ const { logout} = useAuth();
         {/* Reconocimiento facial */}
         <TouchableOpacity
           className="mb-4 rounded-xl bg-primary p-6"
-          onPress={() => navigation.navigate('RegisterFace')}
+          onPress={() => navigation.navigate('OpenCamera')}
         >
           <Text className="text-3xl">📸</Text>
 

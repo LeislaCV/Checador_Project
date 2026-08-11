@@ -49,7 +49,6 @@ export default function EditUserScreen({ route, navigation }: any) {
         schedule_id: scheduleId.trim() ? Number(scheduleId) : null,
       };
 
-      // Solo enviamos contraseña si el administrador escribió una nueva.
       if (password.trim()) {
         body.password = password;
       }

@@ -80,7 +80,7 @@ export default function RegisterFaceScreen({ route, navigation }: any) {
         [
           {
             text: 'Continuar',
-            onPress: () => navigation.navigate('Users'),
+            onPress: () => navigation.goBack(),
           },
         ]
       );

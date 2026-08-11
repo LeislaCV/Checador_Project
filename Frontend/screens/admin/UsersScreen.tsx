@@ -229,29 +229,48 @@ export default function UsersScreen({ navigation }: any) {
                 </View>
 
                 {/* Botones */}
-                <View className="flex-row">
-                  <TouchableOpacity
-                    className="mr-2 flex-1 rounded-lg border border-outline p-3"
-                    onPress={() =>
-                      navigation.navigate('EditUser', {
-                        user,
-                      })
-                    }
-                  >
-                    <Text className="text-center font-semibold text-primary">
-                      Editar
-                    </Text>
-                  </TouchableOpacity>
+<View>
 
-                  <TouchableOpacity
-                    className="flex-1 rounded-lg bg-error-container p-3"
-                    onPress={() => deleteUser(user.id, user.name)}
-                  >
-                    <Text className="text-center font-semibold text-error">
-                      Eliminar
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+  {/* Editar */}
+  <TouchableOpacity
+    className="mb-3 rounded-lg border border-outline p-3"
+    onPress={() =>
+      navigation.navigate('EditUser', {
+        user,
+      })
+    }
+  >
+    <Text className="text-center font-semibold text-primary">
+      ✏️ Editar usuario
+    </Text>
+  </TouchableOpacity>
+
+  {/* Registrar rostro */}
+  <TouchableOpacity
+    className="mb-3 rounded-lg bg-primary p-3"
+    onPress={() =>
+      navigation.navigate('RegisterFace', {
+        userId: user.id,
+        userName: user.name,
+      })
+    }
+  >
+    <Text className="text-center font-semibold text-white">
+      📸 Registrar rostro
+    </Text>
+  </TouchableOpacity>
+
+  {/* Eliminar */}
+  <TouchableOpacity
+    className="rounded-lg bg-error-container p-3"
+    onPress={() => deleteUser(user.id, user.name)}
+  >
+    <Text className="text-center font-semibold text-error">
+      🗑️ Eliminar usuario
+    </Text>
+  </TouchableOpacity>
+
+</View>
               </View>
             ))
           )}

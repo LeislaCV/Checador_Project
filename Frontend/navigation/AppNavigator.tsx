@@ -49,6 +49,7 @@ export default function AppNavigator() {
             <Stack.Screen name="AdminVacations" component={AdminVacationsScreen} />
             <Stack.Screen name="AdminAttendance" component={AdminAttendanceScreen} />
             <Stack.Screen name="Schedules" component={ScheduleScreen}/>
+            <Stack.Screen name="OpenCamera" component={OpenCamera} />
           </>
         ) : (
           <>
