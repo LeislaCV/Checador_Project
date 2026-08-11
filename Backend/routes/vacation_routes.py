@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from Backend.controller.vacation_controller import (create_vacation,get_vacations,get_vacation,update_vacation,delete_vacation)
+from Backend.controller.vacation_controller import (create_vacation,get_vacations,get_vacation,update_vacation,delete_vacation, get_all_vacations)
 
 vacation_routes_bp = Blueprint("vacation_bp",__name__)
 
@@ -36,7 +36,14 @@ def get_one(id):
     return jsonify(
         vacation.to_dict()
     ), 200
+@vacation_routes_bp.route("/vacations", methods=["GET"])
+def get_all():
+    vacations = get_all_vacations()
 
+    return jsonify([
+        vacation.to_dict()
+        for vacation in vacations
+    ]), 200 
 @vacation_routes_bp.route("/vacations/<int:id>",methods=["PUT"])
 def update(id):
     data = request.get_json()

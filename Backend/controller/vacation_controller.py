@@ -31,6 +31,11 @@ def get_vacations(user_id):
 def get_vacation(id):
     return Vacation.query.get(id)
 
+def get_all_vacations():
+    return Vacation.query.order_by(
+        Vacation.start_date.desc()
+    ).all()
+
 def update_vacation(id, data):
     vacation = Vacation.query.get(id)
     if not vacation:
