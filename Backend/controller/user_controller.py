@@ -1,4 +1,7 @@
 from Backend.models.user import User
+from Backend.models.attendance import Attendance
+from Backend.models.vacation import Vacation
+from Backend.models.face import Face
 from Backend.database.db import db
 from werkzeug.security import generate_password_hash
 
@@ -47,11 +50,29 @@ def update_user(id, data):
             
     db.session.commit()
     return user
-def delete_user(id):
-    user = User.query.get(id)
+def delete_user(user_id):
+    user = User.query.get(user_id)
     if not user:
-        return None
-    db.session.delete(user)
-    db.session.commit()
+        return None, "Usuario no encontrado"
+    try:
+        Attendance.query.filter_by(user_id=user_id).delete(
+            synchronize_session=False
+        )
 
-    return user
+        Vacation.query.filter_by(user_id=user_id).delete(
+            synchronize_session=False
+        )
+
+        Face.query.filter_by(user_id=user_id).delete(
+            synchronize_session=False
+        )
+
+        db.session.delete(user)
+        db.session.commit()
+        return True, "Usuario eliminado correctamente"
+
+    except Exception as e:
+        db.session.rollback()
+        print("ERROR AL ELIMINAR USUARIO:", e)
+
+        return None, "No se pudo eliminar el usuario"
